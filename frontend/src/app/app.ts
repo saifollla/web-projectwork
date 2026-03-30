@@ -9,4 +9,10 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('frontend');
+
+  isLoggedIn = false;
+
+  logout(){
+    this.isLoggedIn = false;
+  }
 }

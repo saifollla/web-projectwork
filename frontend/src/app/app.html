@@ -1,7 +1,13 @@
 
 <nav>
-  <a routerLink="/login">Login</a> | 
-  <a routerLink="/chats">My Chats</a>
+  @if (!isLoggedIn) {
+    <a routerLink="/login">Login</a>
+  } 
+  
+  @else {
+    <a routerLink="/chats">My Chats</a> | 
+    <a href="#" (click)="logout()">Logout</a>
+  }
 </nav>
 
 <hr>

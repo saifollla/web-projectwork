@@ -1,1 +1,25 @@
-<p>chat-room works!</p>
+<div class="chat-container">
+  <div class="header">
+    <a routerLink="/chats">← </a>
+    <span>Chat #{{ chatId }}</span>
+  </div>
+
+  <div class="messages-area">
+    @for (msg of messages; track msg.id) {
+      <div class="message" [ngClass]="msg.sender">
+        <div class="text">
+          {{ msg.text }}
+          <span class="time">{{ msg.time }}</span>
+          @if (msg.sender === 'me') {
+            <button class="del-btn" (click)="deleteMsg(msg.id)">×</button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="input-panel">
+    <input type="text" [(ngModel)]="newMessage" (keyup.enter)="send()" placeholder="Type...">
+    <button (click)="send()">Send</button>
+  </div>
+</div>

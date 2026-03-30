@@ -1,1 +1,18 @@
-<p>chat-list works!</p>
+<div class="chat-list-container">
+  <h2>Chats: </h2>
+
+  <div class="list">
+    @for (chat of chats; track chat.id) {
+      <div class="chat-item" [routerLink]="['/chat', chat.id]">
+        <div class="avatar">{{ chat.name[0] }}</div>
+        <div class="info">
+          <span class="name">{{ chat.name }}</span>
+          <p class="last-msg">{{ chat.last_message?.text }}</p>
+        </div>
+      </div>
+    } @empty {
+      <p>You don't have friends.. or chats...</p>
+    }
+  </div>
+  <button (click)="logout()" style="margin-bottom: 10px;">Log out</button>
+</div>
