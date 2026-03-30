@@ -11,7 +11,12 @@
         </div>
       </div>
     } @empty {
-      <p>You don't have friends.. or chats...</p>
+      <div class="empty-state">
+      <div class="icon">💬</div>
+      <h3>No chats!</h3>
+      <p>You don't have active chats. Maybe you should find some friends?...</p>
+      <button routerLink="/find-friends" class="action-btn">Найти друзей</button>
+    </div>
     }
   </div>
   <button (click)="logout()" style="margin-bottom: 10px;">Log out</button>

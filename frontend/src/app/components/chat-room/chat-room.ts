@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Message, User } from '../../models';
+import { ChatService } from '../../services/chat';
 
 @Component({
   selector: 'app-chat-room',
@@ -13,29 +15,32 @@ import { CommonModule } from '@angular/common';
 export class ChatRoom implements OnInit {
   chatId: string | null = '';
   newMessage = ''; 
+  messages: Message[] = [];
   
-  messages = [
-    { id: 1, text: 'hello', sender: 'other', time: '12:00' },
-    { id: 2, text: 'byebye', sender: 'me', time: '12:05' }
-  ];
+  
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private chatService: ChatService) {
+  }
 
   ngOnInit() {
     this.chatId = this.route.snapshot.paramMap.get('id');
+    this.chatService.getMessages(this.chatId!).subscribe(data => {
+    this.messages = data;
+  });
   }
 
   send() {
     if (this.newMessage.trim()) {
-      this.messages.push({
-        id: Date.now(),
-        text: this.newMessage,
-        sender: 'me',
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      });
-      this.newMessage = ''; 
-    }
-  }
+    const msg: Message = {
+      id: Date.now(),
+      chat: Number(this.chatId),
+      text: this.newMessage,
+      sender: { id: 0, username: 'me' }, 
+      created_at: new Date().toISOString()
+    };
+    this.messages.push(msg);
+    this.newMessage = '';
+  }}
 
   deleteMsg(id: number) {
     this.messages = this.messages.filter(m => m.id !== id);

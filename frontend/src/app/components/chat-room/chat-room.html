@@ -1,25 +1,42 @@
 <div class="chat-container">
-  <div class="header">
-    <a routerLink="/chats">← </a>
-    <span>Chat #{{ chatId }}</span>
+  <div class="chat-header">
+    <button class="back-btn" routerLink="/chats">←</button>
+    <span class="chat-name">Chat #{{ chatId }}</span>
   </div>
 
-  <div class="messages-area">
+  <div class="messages-list">
     @for (msg of messages; track msg.id) {
-      <div class="message" [ngClass]="msg.sender">
-        <div class="text">
-          {{ msg.text }}
-          <span class="time">{{ msg.time }}</span>
-          @if (msg.sender === 'me') {
-            <button class="del-btn" (click)="deleteMsg(msg.id)">×</button>
+      <div class="message-wrapper" [class.my-message]="msg.sender.id === 0">
+        
+        <div class="message-bubble">
+          
+          @if (msg.sender && msg.sender.id !== 0) {
+            <span class="sender-name">{{ msg.sender.username }}</span>
           }
+
+          <p class="text">{{ msg.text }}</p>
+          
+          <span class="time">
+            {{ msg.created_at | date:'HH:mm' }}
+          </span>
         </div>
       </div>
-    }
+    } @empty {
+      <div class="empty-chat">
+      <div class="wave-icon">👋</div>
+      <p>No messages...</p>
+      <span>Start your conversation!</span>
+    </div>
+  }
   </div>
 
-  <div class="input-panel">
-    <input type="text" [(ngModel)]="newMessage" (keyup.enter)="send()" placeholder="Type...">
-    <button (click)="send()">Send</button>
+  <div class="input-area">
+    <input 
+      type="text" 
+      [(ngModel)]="newMessage" 
+      (keyup.enter)="send()" 
+      placeholder="Type..."
+    >
+    <button (click)="send()" [disabled]="!newMessage || !newMessage.trim()">➤</button>
   </div>
 </div>

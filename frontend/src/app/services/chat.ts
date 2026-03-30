@@ -36,5 +36,10 @@ export class ChatService {
       { id: 1, chat: 1, text: 'Heyyyyy!', sender: {id: 1, username: 'user'}, created_at: '12:00' }
     ];
     return of(mockMessages);
+    //return this.http.get<Message[]>(`${this.apiUrl}/chats/${chatId}/messages/`);
   }
+
+  sendMessage(chatId: string, text: string): Observable<Message> {
+  return this.http.post<Message>(`${this.apiUrl}/chats/${chatId}/messages/`, { text });
+}
 }
