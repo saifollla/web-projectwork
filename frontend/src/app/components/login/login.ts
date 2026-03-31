@@ -23,4 +23,13 @@ export class LoginComponent {
       alert('Введите логин и пароль!');
     }
   }
+
+  /*
+  login() {
+  this.authService.login(this.username, this.password).subscribe(response => {
+    localStorage.setItem('access_token', response.token); 
+    this.router.navigate(['/chats']);
+  });
+}
+  */
 }

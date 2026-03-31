@@ -50,3 +50,37 @@
 .action-btn:hover {
   background-color: #2980b9;
 }
+
+.search-section {
+  display: flex;
+  background: #f0f2f5;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 5px;
+}
+
+.search-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.logout-btn {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 10px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
