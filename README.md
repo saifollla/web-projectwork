@@ -32,11 +32,6 @@ Ensure you have the following installed:
 * Node.js (v18 or higher) & npm
 * Angular CLI (`npm install -g @angular/cli`)
 
-```bash 
-cd frontend
-ng serve
-```
-
 ### 2. Backend Setup (Django)
 ```bash
 # Clone the repository
@@ -53,3 +48,10 @@ pip install -r requirements.txt
 # Run migrations and start server
 python manage.py migrate
 python manage.py runserver
+```
+
+### 3. Frontend Setup (Angular)
+```bash 
+cd frontend
+ng serve
+```
