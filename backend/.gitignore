@@ -1,0 +1,10 @@
+.*
+
+/__pycache__/
+*.pyc
+
+build
+GigaChat.egg-info
+db.sqlite3
+
+!.gitignore
