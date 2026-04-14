@@ -1,12 +1,40 @@
-<div class="login-container">
-  <h2>Login to Messenger</h2>
-  
-  <input type="text" [(ngModel)]="username" placeholder="Username">
-  <br>
-  <input type="password" [(ngModel)]="password" placeholder="Password">
-  <br>
-  <button (click)="login()">Log in</button>
+<div class="login-page">
+  <div class="left-section">
+    <h1 class="logo">messenger</h1>
+    <p class="tagline">
+      Meet people you know and discover new ones. Connect with friends and family right away.
+    </p>
+  </div>
 
-  <p>Welcome, {{ username }}</p> </div>
+  <div class="right-section">
+    <div class="card">
+      <h2>Login to Messenger</h2>
+      
+      <div class="input-group">
+        <input 
+          type="text" 
+          [(ngModel)]="username" 
+          placeholder="your nickname " 
+        />
+      </div>
 
-  
+      <div class="input-group">
+        <input 
+          type="password" 
+          [(ngModel)]="password" 
+          placeholder="Password" 
+        />
+      </div>
+
+      <button (click)="login()" class="login-btn">
+        Войти
+      </button>
+
+      <div class="divider"></div>
+
+      <button class="register-btn">
+        Create new account
+      </button>
+    </div>
+  </div>
+</div>

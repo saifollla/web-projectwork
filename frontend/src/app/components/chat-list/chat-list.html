@@ -1,44 +1,70 @@
 <div class="chat-list-container">
+  <aside class = "sidebar">
+    <div class="sidebar-header">
+      <h1 class="lovely-logo">GigaChat</h1>
+      <button (click)="logout()" class="logout-btn">🚪</button>
+    </div>
 
-  <div class="search-section">
+    <div class="search-section">
     <input 
       type="text" 
       [(ngModel)]="ngModelSearch" 
+      (input)="onSearchClick()"
       placeholder="Search chats..." 
       class="search-input"
     />
-    <button (click)="onSearchClick()" class="search-icon-btn">
-      🔍
-    </button>
+    <span class="search-icon">🔍</span>
   </div>
-  
-  <h2>Chats: </h2>
+
+  <div class="filters">
+      <button [class.active]="currentFilter === 'all'" (click)="setFilter('all')">All</button>
+      <button [class.active]="currentFilter === 'unread'" (click)="setFilter('unread')">Unread</button>
+      <button [class.active]="currentFilter === 'favorites'" (click)="setFilter('favorites')">Favorites</button>
+  </div>
 
   <div class="list">
-    @for (chat of chats; track chat.id) {
-      <div class="chat-item" [routerLink]="['/chat', chat.id]">
-        <div class="avatar">{{ chat.name[0] }}</div>
-        <div class="info">
-          <span class="name">{{ chat.name }}</span>
-          <p class="last-msg">{{ chat.last_message?.text }}</p>
+      @for (chat of chats; track chat.id) {
+        <div class="chat-item" [routerLink]="['/chats', chat.id]" routerLinkActive="active-chat">
+          <div class="avatar">💖</div>
+          <div class="info">
+            <div class="info-top">
+              <span class="name">{{ chat.name }}</span>
+              <span class="time">09:57</span>
+            </div>
+            <p class="last-msg">{{ chat.last_message?.text }}</p>
+          </div>
+          @if (chat.unread_count) {
+            <div class="unread-badge">{{ chat.unread_count }}</div>
+          }
         </div>
-      </div>
-    } @empty {
+      } @empty {
       <div class="empty-state">
         @if (isSearchActive) {
-        <div class="icon">🔍</div>
+        <div class="empty-state-icon">🔍</div>
         <h3>No matches!</h3>
         <p>We couldn't find any chats matching "{{ ngModelSearch }}".</p>
         <button (click)="ngModelSearch=''; onSearchClick()" class="action-btn">Clear search</button>
       } @else {
-        <div class="icon">💬</div>
+        <div class="empty-state-icon">💖</div>
         <h3>No chats yet!</h3>
         <p>You don't have active chats. Maybe you should find some friends?...</p>
         <button routerLink="/find-friends" class="action-btn">Find some friends</button>
       }
-      
     </div>
-    }
+  }
   </div>
-  <button (click)="logout()" style="margin-bottom: 10px;">Log out</button>
+  </aside>
+  
+  
+
+  <main class="chat-window">
+    <router-outlet></router-outlet>
+    @if (router.url === '/chats') {
+      <div class="no-chat-selected">
+        <div class="heart">💖</div>
+        <h2>GigaChat Messenger</h2>
+        <p>Choose a chat to start messaging</p>
+      </div>
+    }
+  </main>
 </div>

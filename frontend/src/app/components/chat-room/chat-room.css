@@ -1,11 +1,11 @@
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: 90vh; 
-  max-width: 600px;
+  height: 100%; 
+  width: 100%;  
   margin: 0 auto;
   border: 1px solid #ddd;
-  background-color: #f0f2f5; 
+  background-color: #fffafc; 
 }
 
 .chat-header {
@@ -13,7 +13,7 @@
   background: #fff;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ffeff4;
 }
 
 .back-btn {
@@ -22,8 +22,14 @@
   font-size: 20px;
   cursor: pointer;
   margin-right: 15px;
+  color: #ff85b3;
 }
 
+.chat-name{
+  font-weight: bold;
+  color: #b54777;
+  font-size: 1.1rem;
+}
 .messages-list {
   flex: 1;
   overflow-y: auto;
@@ -45,6 +51,7 @@
   background: #fff;
   position: relative;
   box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  border-bottom-left-radius: 5px;
 }
 
 .my-message {
@@ -52,22 +59,28 @@
 }
 
 .my-message .message-bubble {
-  background-color: #dcf8c6; 
+  background-color: #ff85b3; 
+  border-bottom-left-radius: 18px;
   border-bottom-right-radius: 2px;
 }
 
 .sender-name {
   font-size: 0.75rem;
   font-weight: bold;
-  color: #007bff;
+  color: #b54777;
   display: block;
+  margin-bottom: 2px;
 }
 
-.text { margin: 5px 0; }
+.my-message .sender-name {
+  color: #ffe0eb;
+}
+
+.text { margin: 5px 0; line-height: 1.4; }
 
 .time {
   font-size: 0.65rem;
-  color: #999;
+  color: #ffc1d6;
   float: right;
 }
 
@@ -76,18 +89,24 @@
   background: #fff;
   display: flex;
   gap: 10px;
+  align-items: center;
+  border-top: 1px solid #ffeff4;
 }
 
 .input-area input {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #ffe0eb;
   border-radius: 20px;
   outline: none;
+  transition: border-color 0.2s;
+}
+.input-area input:focus {
+  border-color: #ff85b3;
 }
 
 .input-area button {
-  background: #007bff;
+  background: #ff85b3;
   color: white;
   border: none;
   width: 40px;
@@ -95,17 +114,26 @@
   border-radius: 50%;
   cursor: pointer;
   color: white;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.input-area button:hover:not(:disabled) {
+  background-color: #ff66a3;
+  transform: scale(1.05);
 }
 
 .empty-chat {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  flex: 1;
   justify-content: center;
-  height: 100%; 
-  color: #bdc3c7;
+  align-items: center;
+  color: #ffc1d6;
   text-align: center;
-  padding-bottom: 50px;
+  height: 100%;
+  
 }
 
 .wave-icon {
@@ -118,6 +146,7 @@
 .empty-chat p {
   font-size: 18px;
   font-weight: 500;
+  color: #b54777;
   margin-bottom: 5px;
 }
 

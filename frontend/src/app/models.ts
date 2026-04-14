@@ -17,4 +17,6 @@ export interface Chat {
   name: string;
   participants: User[]; 
   last_message?: Message; 
+  unread_count?: number;
+  isFavorite?: boolean;
 }

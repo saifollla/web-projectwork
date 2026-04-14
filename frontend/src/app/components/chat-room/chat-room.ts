@@ -23,9 +23,12 @@ export class ChatRoom implements OnInit {
   }
 
   ngOnInit() {
-    this.chatId = this.route.snapshot.paramMap.get('id');
+    this.route.paramMap.subscribe(params => {
+      this.chatId = params.get('id');
+      if (this.chatId) {
     this.chatService.getMessages(this.chatId!).subscribe(data => {
-    this.messages = data;
+    this.messages = data;});
+      }
   });
   }
 
