@@ -3,6 +3,7 @@ import { LoginComponent } from './components/login/login';
 import { ChatList } from './components/chat-list/chat-list'; 
 import { ChatRoom } from './components/chat-room/chat-room';
 import { authGuard } from './auth.guard';
+import { RegisterComponent } from './components/register/register';
 
 
 export const routes: Routes = [
@@ -12,5 +13,6 @@ export const routes: Routes = [
       {path: ':id', component: ChatRoom}]
     
   },
-  { path: '', redirectTo: '/login', pathMatch: 'full' }
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'register', component: RegisterComponent }
 ];

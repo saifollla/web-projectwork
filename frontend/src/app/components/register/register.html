@@ -1,0 +1,48 @@
+<div class="main-container">
+      <div class="register-card">
+        <a routerLink="/login" class="back-arrow">&#10229;</a>
+
+        <div class="header">
+          <h1 class="logo-text">messenger</h1>
+          <h2>Начните пользоваться GigaChat</h2>
+          <p class="subtitle">Создайте аккаунт для общения с друзьями ✨</p>
+        </div>
+
+        <div class="form-container">
+          <div class="input-row">
+            <input type="text" [(ngModel)]="firstName" placeholder="Имя" class="lovely-input">
+            <input type="text" [(ngModel)]="lastName" placeholder="Фамилия" class="lovely-input">
+          </div>
+
+          <input type="password" [(ngModel)]="password" placeholder="Придумайте пароль" class="lovely-input full-width">
+
+          <div class="section-title">Дата рождения <span class="info-icon">?</span></div>
+          <div class="dob-row">
+            <select [(ngModel)]="dobDay" class="lovely-select">
+              <option value="" disabled selected>День</option>
+              @for (day of days; track day) { <option [value]="day">{{day}}</option> }
+            </select>
+            <select [(ngModel)]="dobMonth" class="lovely-select">
+              <option value="" disabled selected>Месяц</option>
+              @for (month of months; track month) { <option [value]="month">{{month}}</option> }
+            </select>
+            <select [(ngModel)]="dobYear" class="lovely-select">
+              <option value="" disabled selected>Год</option>
+              @for (year of years; track year) { <option [value]="year">{{year}}</option> }
+            </select>
+          </div>
+
+          <div class="section-title">Пол <span class="info-icon">?</span></div>
+          <select [(ngModel)]="gender" class="lovely-select full-width gender-select">
+            <option value="" disabled selected>Выберите пол</option>
+            <option value="female">Женский 🌸</option>
+            <option value="male">Мужской 🦋</option>
+            <option value="other">Другое ✨</option>
+          </select>
+
+          <button (click)="onRegister()" class="register-submit-btn">Зарегистрироваться</button>
+
+          <a routerLink="/login" class="login-link">Уже есть аккаунт? Войти</a>
+        </div>
+      </div>
+    </div>
