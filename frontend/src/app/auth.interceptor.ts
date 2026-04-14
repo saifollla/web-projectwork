@@ -11,21 +11,21 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
 
   if (token) {
-    const authReq = req.clone({
+    authReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`
       }
     });
     return next(authReq);
   }
-return next(authReq).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        console.log('byebye.....');
-        localStorage.removeItem('access_token'); 
-        router.navigate(['/login']); 
-      }
-      return throwError(() => error);
-    })
-  );
+  return next(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          console.log('byebye.....');
+          localStorage.removeItem('access_token'); 
+          router.navigate(['/login']); 
+        }
+        return throwError(() => error);
+      })
+    );
 };
