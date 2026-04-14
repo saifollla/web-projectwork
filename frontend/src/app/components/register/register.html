@@ -3,46 +3,46 @@
         <a routerLink="/login" class="back-arrow">&#10229;</a>
 
         <div class="header">
-          <h1 class="logo-text">messenger</h1>
-          <h2>Начните пользоваться GigaChat</h2>
-          <p class="subtitle">Создайте аккаунт для общения с друзьями ✨</p>
+          <h1 class="logo-text">Messenger</h1>
+          <h2>Start using GigaChat</h2>
+          <p class="subtitle">Create your account and start chatting today! ✨</p>
         </div>
 
         <div class="form-container">
           <div class="input-row">
-            <input type="text" [(ngModel)]="firstName" placeholder="Имя" class="lovely-input">
-            <input type="text" [(ngModel)]="lastName" placeholder="Фамилия" class="lovely-input">
+            <input type="text" [(ngModel)]="firstName" placeholder="First Name" class="lovely-input">
+            <input type="text" [(ngModel)]="lastName" placeholder="Last Name" class="lovely-input">
           </div>
 
-          <input type="password" [(ngModel)]="password" placeholder="Придумайте пароль" class="lovely-input full-width">
+          <input type="password" [(ngModel)]="password" placeholder="Create a Password" class="lovely-input full-width">
 
-          <div class="section-title">Дата рождения <span class="info-icon">?</span></div>
+          <div class="section-title">Date of Birth <span class="info-icon">?</span></div>
           <div class="dob-row">
             <select [(ngModel)]="dobDay" class="lovely-select">
-              <option value="" disabled selected>День</option>
+              <option value="" disabled selected>Day</option>
               @for (day of days; track day) { <option [value]="day">{{day}}</option> }
             </select>
             <select [(ngModel)]="dobMonth" class="lovely-select">
-              <option value="" disabled selected>Месяц</option>
+              <option value="" disabled selected>Month</option>
               @for (month of months; track month) { <option [value]="month">{{month}}</option> }
             </select>
             <select [(ngModel)]="dobYear" class="lovely-select">
-              <option value="" disabled selected>Год</option>
+              <option value="" disabled selected>Year</option>
               @for (year of years; track year) { <option [value]="year">{{year}}</option> }
             </select>
           </div>
 
-          <div class="section-title">Пол <span class="info-icon">?</span></div>
+          <div class="section-title">Gender <span class="info-icon">?</span></div>
           <select [(ngModel)]="gender" class="lovely-select full-width gender-select">
-            <option value="" disabled selected>Выберите пол</option>
-            <option value="female">Женский 🌸</option>
-            <option value="male">Мужской 🦋</option>
-            <option value="other">Другое ✨</option>
+            <option value="" disabled selected>Choose Gender</option>
+            <option value="female">Female 🌸</option>
+            <option value="male">Male 🦋</option>
+            <option value="other">Other ✨</option>
           </select>
 
-          <button (click)="onRegister()" class="register-submit-btn">Зарегистрироваться</button>
+          <button (click)="onRegister()" class="register-submit-btn">Register</button>
 
-          <a routerLink="/login" class="login-link">Уже есть аккаунт? Войти</a>
+          <a routerLink="/login" class="login-link">Already have an account? Log in</a>
         </div>
       </div>
     </div>
