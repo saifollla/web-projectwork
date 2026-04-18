@@ -16,11 +16,22 @@ class Chat(models.Model):
     def __str__(self):
         return self.name
 
+#кастомная модель. менеджер сообщений поняли да
+class MessageManager(models.Manager):
+    def for_chat(self, chat_id):
+        return self.filter(chat_id=chat_id).select_related('sender')
+
+    def unread_for_user(self, user):
+        return self.filter(read_statuses__user=user, read_statuses__is_read=False)
+    
+
 class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = MessageManager()
 
     class Meta:
         ordering = ['created_at']
@@ -28,7 +39,7 @@ class Message(models.Model):
     def __str__(self):
         return f"{self.sender.username}: {self.text[:20]}"
 
-#вот эту штуку добавь айзере который фронт
+#вот эту штуку добавь айзере который фронт которая еще айзере. Нам нужно 4 модельки!!!
 class MessageReadStatus(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='read_statuses')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -36,3 +47,4 @@ class MessageReadStatus(models.Model):
 
     class Meta:
         unique_together = ('message', 'user')
+
