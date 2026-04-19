@@ -27,8 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-AUTH_USER_MODEL = 'api.User'
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -36,7 +34,6 @@ INSTALLED_APPS = [
     "rest_framework",
     'rest_framework.authtoken',
     'corsheaders',
-    "drf_spectacular",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -114,36 +111,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
-    
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated', 
     ],
-}
-
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'GigaChat API',
-    'DESCRIPTION': 'GigaChat API Documentation',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-
-    # AUTH COMPONENT
-    'COMPONENT_SPLIT_PATCH': True,
-    'SECURITY': [
-        {
-            'jwtAuth': [],
-        }
-    ],
-    'APPEND_COMPONENTS': {
-        'securitySchemes': {
-            'jwtAuth': {
-                'type': 'http',
-                'scheme': 'bearer',
-                'bearerFormat': 'JWT',
-            }
-        }
-    },
 }
 
 

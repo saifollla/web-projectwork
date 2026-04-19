@@ -5,7 +5,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from .models import Message, Chat
-from .serializers import MessageModelSerializer, LoginSerializer
+from .serializers import MessageModelSerializer, LoginSerializer, ChatListSerializer
+
+class ChatList(APIView):
+    def get(self, request):
+        chats = Chat.objects.filter(participants=request.user)
+        serializer = ChatListSerializer(chats, many=True)
+        return Response(serializer.data)
 
 class MessageList(APIView):    
     def get(self, request, chat_id):
@@ -28,6 +34,15 @@ class MessageDetail(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Message.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        
+    #если надо
+    # def delete(self, request, pk):
+    #     try:
+    #         message = Message.objects.get(pk=pk, sender=request.user)
+    #         message.delete()
+    #         return Response(status=status.HTTP_204_NO_CONTENT)
+    #     except Message.DoesNotExist:
+    #         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny]) 
