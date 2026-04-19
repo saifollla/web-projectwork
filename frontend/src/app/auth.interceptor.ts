@@ -13,15 +13,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (token) {
     authReq = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Token ${token}`
       }
     });
-    return next(authReq);
   }
   return next(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          console.log('byebye.....');
+          console.log('Session expired or invalid token');
           localStorage.removeItem('access_token'); 
           router.navigate(['/login']); 
         }
