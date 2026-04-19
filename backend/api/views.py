@@ -40,7 +40,7 @@ def login_view(request):
         )
         if user:
             token, _ = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key})
+            return Response({'access_token': token.key}) 
         return Response({'error': 'Invalid Credentials'}, status=400)
     return Response(serializer.errors, status=400)
 

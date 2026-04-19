@@ -13,6 +13,7 @@ class MessageModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ['id', 'chat', 'sender', 'text', 'created_at']
+        read_only_fields = ['chat']
 
 
 class ChatListSerializer(serializers.Serializer):
