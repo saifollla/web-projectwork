@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, of, tap } from 'rxjs';
 import { Chat, Message } from '../models'; 
 
 @Injectable({
@@ -11,7 +11,20 @@ export class ChatService {
 
   constructor(private http: HttpClient) {}
 
+  private getHeaders() {
+    const token = localStorage.getItem('access_token');
+    return new HttpHeaders({
+      'Authorization': `Token ${token}`
+    });
+  }
+
   getChats(): Observable<Chat[]> {
+    const headers = this.getHeaders();
+    
+    return this.http.get<Chat[]>(`${this.apiUrl}/chats/`, { headers }).pipe(
+      tap(response => console.log('Chats loaded:', response))
+    );
+
     const mockChats: Chat[] = [
   { 
     id: 1, 

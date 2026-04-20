@@ -12,7 +12,7 @@ from .serializers import MessageModelSerializer, LoginSerializer, ChatListSerial
 class ChatList(APIView):
     def get(self, request):
         chats = Chat.objects.filter(participants=request.user)
-        serializer = ChatListSerializer(chats, many=True)
+        serializer = ChatListSerializer(chats, many=True, context={'request': request})
         return Response(serializer.data)
 
 class MessageList(APIView):    

@@ -16,13 +16,44 @@ class MessageModelSerializer(serializers.ModelSerializer):
         read_only_fields = ['chat']
 
 
-class ChatListSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    name = serializers.CharField()
-    last_message_text = serializers.CharField(source='messages.last.text', read_only=True)
-    unread_count = serializers.IntegerField(default=0)
+# class ChatListSerializer(serializers.Serializer):
+#     id = serializers.IntegerField()
+#     name = serializers.CharField()
+#     last_message_text = serializers.CharField(source='messages.last.text', read_only=True)
+#     unread_count = serializers.IntegerField(default=0)
+class LastMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ['id', 'text', 'created_at']
 
-#Вот этот сериалайзер от балды добавил. Нужно нормальный написать.
+class ChatListSerializer(serializers.ModelSerializer):
+    display_name = serializers.SerializerMethodField()
+    last_message = serializers.SerializerMethodField() # Переопределяем логику
+
+    class Meta:
+        model = Chat
+        fields = ['id', 'display_name', 'last_message', 'created_at']
+
+    def get_display_name(self, obj):
+        request = self.context.get('request')
+
+        if not request or not request.user:
+            return obj.name
+
+        other_participant = obj.participants.exclude(id=request.user.id).first()
+
+        if other_participant:
+            full_name = f"{other_participant.first_name} {other_participant.last_name}".strip()
+            return full_name or other_participant.username
+
+        return "Favorite"
+
+    def get_last_message(self, obj):
+        last_msg = obj.messages.order_by('-created_at').first()
+        if last_msg:
+            return LastMessageSerializer(last_msg).data
+        return None
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
