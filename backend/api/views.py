@@ -4,9 +4,10 @@ from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
-from .models import Message, Chat
-from .serializers import MessageModelSerializer, LoginSerializer, ChatListSerializer
+from drf_spectacular.utils import extend_schema
+# from django.contrib.auth.models import User
+from .models import Message, Chat, User
+from .serializers import MessageModelSerializer, LoginSerializer, ChatListSerializer, RegisterSerializer
 
 class ChatList(APIView):
     def get(self, request):
@@ -45,6 +46,11 @@ class MessageDetail(APIView):
     #     except Message.DoesNotExist:
     #         return Response(status=status.HTTP_404_NOT_FOUND)
 
+@extend_schema(
+    request=LoginSerializer,
+    responses={200: {'type': 'object', 'properties': {'access_token': {'type': 'string'}}}},
+    description="Авторизация пользователя и получение токена."
+)
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny]) 
 def login_view(request):
@@ -65,14 +71,22 @@ def logout_view(request):
     request.user.auth_token.delete()
     return Response({"message": "Successfully logged out"}, status=200)
 
+@extend_schema(
+    request=RegisterSerializer,
+    responses={200: {'type': 'object', 'properties': {'access_token': {'type': 'string'}}}},
+    description="Авторизация пользователя и получение токена."
+)
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
 def register_view(request):
-    serializer = LoginSerializer(data=request.data)
+    serializer = RegisterSerializer(data=request.data)
     if serializer.is_valid():
         user = User.objects.create_user(
             username=serializer.validated_data['username'],
-            password=serializer.validated_data['password']
+            password=serializer.validated_data['password'],
+            first_name=serializer.validated_data['first_name'],
+            last_name=serializer.validated_data['last_name'],
+            gender=serializer.validated_data['gender'],
         )
         token, _ = Token.objects.get_or_create(user=user)
         return Response({'access_token': token.key}, status=201)

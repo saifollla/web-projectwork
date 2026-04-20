@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Chat, Message, MessageReadStatus
+from .models import User, Chat, Message, MessageReadStatus
 
 @admin.register(Chat)
 class ChatAdmin(admin.ModelAdmin):
@@ -12,5 +12,8 @@ class MessageAdmin(admin.ModelAdmin):
     list_filter = ('chat', 'sender') 
     search_fields = ('text',)
 
-admin.site.register(UserProfile)
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'first_name', 'last_name', 'gender')
+
 admin.site.register(MessageReadStatus)

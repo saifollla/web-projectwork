@@ -55,6 +55,8 @@ MIDDLEWARE = [
     
 ]
 
+AUTH_USER_MODEL = 'api.User'
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
 ]
@@ -116,11 +118,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated', 
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
 }
 
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'GigaChat API',

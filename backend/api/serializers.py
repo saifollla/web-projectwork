@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
-from .models import Chat, Message, UserProfile
+# from django.contrib.auth.models import User
+from .models import Chat, Message, User
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,3 +26,10 @@ class ChatListSerializer(serializers.Serializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
+
+class RegisterSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    gender = serializers.CharField()
