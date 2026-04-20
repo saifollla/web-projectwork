@@ -25,6 +25,11 @@
   <div class="list">
       @for (chat of chats; track chat.id) {
         <div class="chat-item" [routerLink]="['/chats', chat.id]" routerLinkActive="active-chat">
+          <button class="fav-star" 
+          [class.is-fav]="chat.isFavorite" 
+          (click)="$event.stopPropagation(); toggleFavorite(chat)">
+           {{ chat.isFavorite ? '⭐' : '☆' }}
+          </button>
           <div class="avatar">💖</div>
           <div class="info">
             <div class="info-top">
@@ -48,7 +53,6 @@
         <div class="empty-state-icon">💖</div>
         <h3>No chats yet!</h3>
         <p>You don't have active chats. Maybe you should find some friends?...</p>
-        <button routerLink="/find-friends" class="action-btn">Find some friends</button>
       }
     </div>
   }

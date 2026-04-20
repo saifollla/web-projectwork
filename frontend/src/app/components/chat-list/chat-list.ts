@@ -72,5 +72,10 @@ export class ChatList implements OnInit {
 
   
   }
+  toggleFavorite(chat: Chat) {
+    chat.isFavorite = !chat.isFavorite;
+    this.applyFilters();
+    //this.chatService.toggleFavorite(chat.id).subscribe();
+  }
 }
 

@@ -8,6 +8,26 @@
   background-color: #ffe0eb;
 
 }
+
+.fav-star {
+  background: none;      
+  border: none;          
+  cursor: pointer;       
+  font-size: 20px;       
+  color: #ccc;           
+  padding: 0;
+  margin-right: 10px;    
+  transition: transform 0.2s ease, color 0.2s ease;
+  outline: none;         
+}
+
+.fav-star:hover {
+  transform: scale(1.2); }
+
+.fav-star.active {
+  color: #ffca28;        
+  text-shadow: 0 0 5px rgba(255, 202, 40, 0.5); 
+}
 .sidebar {
   width: 350px;
   min-width: 350px;
