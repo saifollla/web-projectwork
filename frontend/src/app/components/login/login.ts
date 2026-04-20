@@ -20,6 +20,8 @@ export class LoginComponent {
     if (this.username && this.password){
       this.authService.login({ username: this.username, password: this.password }).subscribe({
         next: (response) => {
+          localStorage.setItem('access_token', response.access_token);
+          console.log('Token saved:', response.access_token);
           this.router.navigate(['/chats']);
         },
         error: (err) => {

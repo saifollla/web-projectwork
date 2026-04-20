@@ -28,7 +28,7 @@ export class RegisterComponent {
 
   onRegister() {
     const userData = {
-    username: this.firstName.toLowerCase() + this.dobYear, 
+    username: this.firstName.toLowerCase(), 
     password: this.password,
     first_name: this.firstName,
     last_name: this.lastName,
