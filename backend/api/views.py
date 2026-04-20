@@ -4,6 +4,7 @@ from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from .models import Message, Chat
 from .serializers import MessageModelSerializer, LoginSerializer, ChatListSerializer
 
@@ -63,3 +64,16 @@ def login_view(request):
 def logout_view(request):
     request.user.auth_token.delete()
     return Response({"message": "Successfully logged out"}, status=200)
+
+@api_view(['POST'])
+@permission_classes([permissions.AllowAny])
+def register_view(request):
+    serializer = LoginSerializer(data=request.data)
+    if serializer.is_valid():
+        user = User.objects.create_user(
+            username=serializer.validated_data['username'],
+            password=serializer.validated_data['password']
+        )
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response({'access_token': token.key}, status=201)
+    return Response(serializer.errors, status=400)
