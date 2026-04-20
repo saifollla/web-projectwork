@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "api",
     "rest_framework",
     'rest_framework.authtoken',
+    'drf_spectacular',
     'corsheaders',
     "django.contrib.admin",
     "django.contrib.auth",
@@ -115,6 +116,17 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated', 
     ],
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'GigaChat API',
+    'DESCRIPTION': 'Description of API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 

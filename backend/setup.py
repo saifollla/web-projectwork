@@ -11,6 +11,7 @@ setuptools.setup(
         "Django==6.0.4",
         "djangorestframework==3.17.1",
         "djangorestframework_simplejwt==5.5.1",
+        "django-cors-headers==4.9.0",
         "drf-spectacular==0.29.0"
     ]
 )
