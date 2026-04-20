@@ -84,8 +84,6 @@ def register_view(request):
         user = User.objects.create_user(
             username=serializer.validated_data['username'],
             password=serializer.validated_data['password'],
-            first_name=serializer.validated_data['first_name'],
-            last_name=serializer.validated_data['last_name'],
             gender=serializer.validated_data['gender'],
         )
         token, _ = Token.objects.get_or_create(user=user)
