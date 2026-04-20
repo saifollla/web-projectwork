@@ -30,8 +30,7 @@ export class RegisterComponent {
     const userData = {
     username: this.firstName.toLowerCase(), 
     password: this.password,
-    first_name: this.firstName,
-    last_name: this.lastName,
+    gender: this.gender
   
   };
     
