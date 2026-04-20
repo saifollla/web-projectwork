@@ -10,7 +10,10 @@ import { ChatService } from '../../services/chat';
   standalone: true,
   imports: [FormsModule, CommonModule,RouterLink],
   templateUrl: './chat-room.html',
-  styleUrl: './chat-room.css'
+  styleUrl: './chat-room.css',
+  host: {
+    'class': 'app-chat-room',
+  }
 })
 export class ChatRoom implements OnInit {
   chatId: string | null = '';

@@ -33,7 +33,7 @@ export class ChatService {
 
   getMessages(chatId: string): Observable<Message[]> {
     const mockMessages: Message[] = [
-      { id: 1, chat: 1, text: 'Heyyyyy!', sender: {id: 1, username: 'user'}, created_at: '12:00' }
+      { id: 1, chat: 1, text: 'Heyyyyy!', sender: {id: 1, username: 'user'}, created_at: '' }
     ];
     return of(mockMessages);
     //return this.http.get<Message[]>(`${this.apiUrl}/chats/${chatId}/messages/`);
