@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-register',
@@ -23,20 +24,25 @@ export class RegisterComponent {
   months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   years = Array.from({length: 100}, (_, i) => new Date().getFullYear() - i);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   onRegister() {
-    const fullName = `${this.firstName} ${this.lastName}`;
-    const birthDate = `${this.dobDay} ${this.dobMonth} ${this.dobYear}`;
+    const userData = {
+    username: this.firstName.toLowerCase() + this.dobYear, 
+    password: this.password,
+    first_name: this.firstName,
+    last_name: this.lastName,
+  
+  };
     
-    console.log('Registration Data:', {
-      name: fullName,
-      password: this.password,
-      dob: birthDate,
-      gender: this.gender
-    });
-
-    alert(`lovely! ${this.firstName}, is created. Now log in.`);
-    this.router.navigate(['/login']);
-  }
-}
+    this.authService.register(userData).subscribe({
+    next: (response) => {
+      alert(`Lovely! ${this.firstName}, account is created. Now log in.`);
+      this.router.navigate(['/login']);
+    },
+    error: (err) => {
+      console.error('Registration failed:', err);
+      alert('Error: Registration failed. Please try again.');
+    }
+  });
+}}
