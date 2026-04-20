@@ -27,14 +27,14 @@ class LastMessageSerializer(serializers.ModelSerializer):
         fields = ['id', 'text', 'created_at']
 
 class ChatListSerializer(serializers.ModelSerializer):
-    display_name = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
     last_message = serializers.SerializerMethodField() # Переопределяем логику
 
     class Meta:
         model = Chat
-        fields = ['id', 'display_name', 'last_message', 'created_at']
+        fields = ['id', 'name', 'last_message', 'created_at']
 
-    def get_display_name(self, obj):
+    def get_name(self, obj):
         request = self.context.get('request')
 
         if not request or not request.user:

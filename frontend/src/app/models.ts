@@ -15,8 +15,8 @@ export interface Message {
 export interface Chat {
   id: number;
   name: string;
-  participants: User[]; 
   last_message?: Message; 
   unread_count?: number;
   isFavorite?: boolean;
+  created_at: string;
 }

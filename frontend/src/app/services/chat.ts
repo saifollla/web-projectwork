@@ -24,24 +24,6 @@ export class ChatService {
     return this.http.get<Chat[]>(`${this.apiUrl}/chats/`, { headers }).pipe(
       tap(response => console.log('Chats loaded:', response))
     );
-
-    const mockChats: Chat[] = [
-  { 
-    id: 1, 
-    name: 'Kanye', 
-    participants: [], 
-    last_message: { id: 1, chat: 1, text: 'lalalala', sender: {id: 1, username: 'admin'}, created_at: '' } 
-  },
-  { 
-    id: 2, 
-    name: 'Aizere', 
-    participants: [], 
-    last_message: { id: 2, chat: 2, text: 'hey', sender: {id: 2, username: 'user'}, created_at: '' } 
-  }
-];
-    return of(mockChats);
-    // ilyas ya tebya zhdu
-    // return this.http.get<Chat[]>(`${this.apiUrl}/chats/`);
   }
 
   getMessages(chatId: string): Observable<Message[]> {
