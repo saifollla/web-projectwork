@@ -37,15 +37,6 @@ class MessageDetail(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Message.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
-    #если надо
-    # def delete(self, request, pk):
-    #     try:
-    #         message = Message.objects.get(pk=pk, sender=request.user)
-    #         message.delete()
-    #         return Response(status=status.HTTP_204_NO_CONTENT)
-    #     except Message.DoesNotExist:
-    #         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @extend_schema(
     request=LoginSerializer,
