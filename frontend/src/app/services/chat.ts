@@ -53,4 +53,12 @@ export class ChatService {
       { headers: headers }, 
     );
   }
+
+  getAllUsers(): Observable<User[]> {
+  return this.http.get<User[]>(`${this.apiUrl}/users/`);
+}
+
+createChat(userId: number): Observable<Chat> {
+  return this.http.post<Chat>(`${this.apiUrl}/chats/`, { user_id: userId });
+}
 }

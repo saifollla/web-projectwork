@@ -42,20 +42,35 @@
             <div class="unread-badge">{{ chat.unread_count }}</div>
           }
         </div>
-      } @empty {
-      <div class="empty-state">
-        @if (isSearchActive) {
-        <div class="empty-state-icon">🔍</div>
-        <h3>No matches!</h3>
-        <p>We couldn't find any chats matching "{{ ngModelSearch }}".</p>
-        <button (click)="ngModelSearch=''; onSearchClick()" class="action-btn">Clear search</button>
-      } @else {
-        <div class="empty-state-icon">💖</div>
-        <h3>No chats yet!</h3>
-        <p>You don't have active chats. Maybe you should find some friends?...</p>
+      } 
+      @if (isSearchActive && foundUsers.length > 0) {
+        <div class="search-divider">Find new friends 🌸</div>
+        @for (user of foundUsers; track user.id) {
+          <div class="chat-item global-user" (click)="startNewChat(user.id)">
+            <div class="avatar">✨</div>
+            <div class="info">
+              <span class="name">{{ user.username }}</span>
+              <p class="last-msg">Start chatting!</p>
+            </div>
+          </div>
+        }
       }
-    </div>
-  }
+      @if (isSearchActive && chats.length === 0 && foundUsers.length === 0) {
+        <div class="empty-state">
+          <div class="empty-state-icon">🔍</div>
+          <h3>No matches!</h3>
+          <p>We couldn't find anyone matching "{{ ngModelSearch }}".</p>
+          <button (click)="ngModelSearch=''; onSearchClick()" class="action-btn">Clear search</button>
+        </div>
+      }
+      @if (!isSearchActive && chats.length === 0) {
+        <div class="empty-state">
+          <div class="empty-state-icon">💖</div>
+          <h3>No chats yet!</h3>
+          <p>You don't have active chats. Try searching for friends!</p>
+        </div>
+      }
+          
   </div>
   </aside>
   
