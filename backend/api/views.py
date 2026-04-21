@@ -32,6 +32,25 @@ class MessageList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class MessageDetail(APIView):
+    def get(self, request, pk):
+        try:
+            message = Message.objects.get(pk=pk)
+            serializer = MessageModelSerializer(message)
+            return Response(serializer.data)
+        except Message.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+    def patch(self, request, pk):
+        try:
+            message = Message.objects.get(pk=pk, sender=request.user)
+            serializer = MessageModelSerializer(message, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Message.DoesNotExist:
+            return Response({"error": "Message not found or not your"}, status=404)
+
     def delete(self, request, pk):
         try:
             message = Message.objects.get(pk=pk, sender=request.user)

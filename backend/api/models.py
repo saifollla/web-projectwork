@@ -39,7 +39,6 @@ class Message(models.Model):
     def __str__(self):
         return f"{self.sender.username}: {self.text[:20]}"
 
-#вот эту штуку добавь айзере который фронт которая еще айзере. Нам нужно 4 модельки!!!
 class MessageReadStatus(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='read_statuses')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
