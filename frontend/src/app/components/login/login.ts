@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../auth.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -14,24 +15,24 @@ export class LoginComponent {
   username = '';
   password = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private toastr: ToastrService) {}
 
   login() {
     if (this.username && this.password){
       this.authService.login({ username: this.username, password: this.password }).subscribe({
         next: (response) => {
+          this.toastr.success('Welcome back, ' + this.username + ':3');
           localStorage.setItem('access_token', response.access_token);
-          console.log('Token saved:', response.access_token);
           this.router.navigate(['/chats']);
         },
         error: (err) => {
-          console.error('Ошибка входа:', err);
-          alert('Ошибка: ' + (err.error?.detail || 'Неверный логин или пароль'));
+          console.error('Error:', err);
+          this.toastr.error('Error: ' + (err.error?.detail || 'Login failed. Please try again T-T'));
         }
       });
     }
     else {
-      alert('Введите логин и пароль!');
+      this.toastr.error('Please enter both username and password ;(');
     }
   }
 

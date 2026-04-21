@@ -6,6 +6,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
 import { ChatService } from '../../services/chat'; 
 import { Chat } from '../../models'; 
+import { ToastrService } from 'ngx-toastr'; 
 
 @Component({
   selector: 'app-chat-list',
@@ -21,6 +22,7 @@ export class ChatList implements OnInit {
   currentFilter: 'all' | 'unread' | 'favorites' = 'all';    
   filteredChats: Chat[] = [];
   isSearchActive: boolean = false;
+  toastr = inject(ToastrService);
 
   chatService = inject(ChatService);
   router = inject(Router);
@@ -77,7 +79,14 @@ export class ChatList implements OnInit {
   }
   toggleFavorite(chat: Chat) {
     chat.isFavorite = !chat.isFavorite;
+    
+
     this.applyFilters();
+    if (chat.isFavorite) {
+      this.toastr.success(`Chat "${chat.name}" added to favorites!`);
+    } else {
+      this.toastr.info(`Chat "${chat.name}" removed from favorites.`);
+    }
     //this.chatService.toggleFavorite(chat.id).subscribe();
   }
 }
