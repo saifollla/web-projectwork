@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { inject } from '@angular/core';
@@ -25,6 +25,7 @@ export class ChatList implements OnInit {
   chatService = inject(ChatService);
   router = inject(Router);
   ngModelSearch: string = '';
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.chatService.getChats().subscribe(data => {
@@ -34,6 +35,8 @@ export class ChatList implements OnInit {
         isFavorite: Math.random() > 0.8,
       }));
       this.applyFilters();
+      this.cdr.detectChanges();
+      console.log('Чаты после фильтрации:', this.chats);
     });
   }
 

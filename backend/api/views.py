@@ -7,13 +7,14 @@ from django.contrib.auth import authenticate
 from drf_spectacular.utils import extend_schema
 # from django.contrib.auth.models import User
 from .models import Message, Chat, User
-from .serializers import MessageModelSerializer, LoginSerializer, ChatListSerializer, RegisterSerializer
+from .serializers import MessageModelSerializer, LoginSerializer, ChatListSerializer, RegisterSerializer, UserSerializer
+
+
 
 class ChatList(APIView):
     def get(self, request):
         chats = Chat.objects.filter(participants=request.user)
         serializer = ChatListSerializer(chats, many=True, context={'request': request})
-        print(serializer.data)
         return Response(serializer.data)
 
 class MessageList(APIView):    
@@ -24,6 +25,7 @@ class MessageList(APIView):
 
     def post(self, request, chat_id):
         serializer = MessageModelSerializer(data=request.data)
+        print(serializer.initial_data)
         if serializer.is_valid():
             serializer.save(sender=request.user, chat_id=chat_id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -37,6 +39,12 @@ class MessageDetail(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Message.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def get_me(request):
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
+
 
 @extend_schema(
     request=LoginSerializer,

@@ -24,6 +24,7 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register/`, userData);
   }
 
+
   isLoggedIn(): boolean {
     return !!localStorage.getItem('access_token');
   }

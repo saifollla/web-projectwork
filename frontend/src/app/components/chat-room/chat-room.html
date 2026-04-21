@@ -6,7 +6,7 @@
 
   <div class="messages-list">
     @for (msg of messages; track msg.id) {
-      <div class="message-wrapper" [class.my-message]="msg.sender.id === 0">
+      <div class="message-wrapper" [class.my-message]="msg.sender.id === currentUserId">
         
         <div class="message-bubble">
           
