@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, tap } from 'rxjs';
 import { Chat, Message, User } from '../models'; 
-import { TestBed } from '@angular/core/testing';
 
 @Injectable({
   providedIn: 'root'
@@ -55,10 +54,13 @@ export class ChatService {
   }
 
   getAllUsers(): Observable<User[]> {
-  return this.http.get<User[]>(`${this.apiUrl}/users/`);
+  return this.http.get<User[]>(`${this.apiUrl}/users/`, { headers: this.getHeaders() });
 }
 
 createChat(userId: number): Observable<Chat> {
-  return this.http.post<Chat>(`${this.apiUrl}/chats/`, { user_id: userId });
+  return this.http.post<Chat>(`${this.apiUrl}/chats/`, { user_id: userId }, { headers: this.getHeaders() });
+}
+markAsRead(chatId: number) {
+  return this.http.post(`${this.apiUrl}/chats/${chatId}/read/`, {});
 }
 }

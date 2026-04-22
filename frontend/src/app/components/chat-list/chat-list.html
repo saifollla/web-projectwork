@@ -24,7 +24,7 @@
 
   <div class="list">
       @for (chat of chats; track chat.id) {
-        <div class="chat-item" [routerLink]="['/chats', chat.id]" routerLinkActive="active-chat">
+        <div class="chat-item" [routerLink]="['/chats', chat.id]" (click) = "onChatClick(chat)" routerLinkActive="active-chat">
           <button class="fav-star" 
           [class.is-fav]="chat.isFavorite" 
           (click)="$event.stopPropagation(); toggleFavorite(chat)">
@@ -34,14 +34,19 @@
           <div class="info">
             <div class="info-top">
               <span class="name">{{ chat.name }}</span>
-              <span class="time">09:57</span>
+              @if (chat.last_message) {
+
+                <span class="time">{{ chat.last_message.created_at | date:'HH:mm' }}</span>
+              }
             </div>
-            <p class="last-msg">{{ chat.last_message?.text }}</p>
+            <p class="last-msg">
+              {{ chat.last_message ? chat.last_message.text : 'No messages yet... ' }}
+            </p>
           </div>
-          @if (chat.unread_count) {
+          @if ((chat.unread_count || 0) > 0) {
             <div class="unread-badge">{{ chat.unread_count }}</div>
           }
-        </div>
+          </div>  
       } 
       @if (isSearchActive && foundUsers.length > 0) {
         <div class="search-divider">Find new friends 🌸</div>
@@ -70,7 +75,8 @@
           <p>You don't have active chats. Try searching for friends!</p>
         </div>
       }
-          
+      
+    
   </div>
   </aside>
   

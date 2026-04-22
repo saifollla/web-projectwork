@@ -32,30 +32,13 @@ export class ChatList implements OnInit {
   cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
-    this.allChats = [
-    {
-      id: 1, name: 'Kanye', unread_count: 1, isFavorite: false,
-      created_at: ''
-    },
-    {
-      id: 2, name: 'Zarina', unread_count: 0, isFavorite: true,
-      created_at: ''
-    }
-  ];
-  this.applyFilters();
 
-  // 2. Имитируем список ВСЕХ пользователей из базы
-  this.allUsers = [
-    { id: 1, username: 'Kanye' },
-    { id: 2, username: 'Zarina' },
-    { id: 3, username: 'Ilyas' }, // Новое имя!
-    { id: 4, username: 'Aizere' }, // Новое имя!
-    { id: 5, username: 'Admin' }
-  ];
     this.chatService.getChats().subscribe(data => {
+      console.log('Данные от API:', data);
       this.allChats = data.map(c => ({
         ...c,
-        unread_count: Math.floor(Math.random() * 5), //
+        unread_count: Number(c.unread_count) || 0,
+        isFavorite: c.is_favorite || c.isFavorite || false
       }));
       this.applyFilters();
       this.cdr.detectChanges();
@@ -119,7 +102,6 @@ export class ChatList implements OnInit {
     } else {
       this.toastr.info(`Chat "${chat.name}" removed from favorites.`);
     }
-    //this.chatService.toggleFavorite(chat.id).subscribe();
   }
   startNewChat(userId: number) {
     this.chatService.createChat(userId).subscribe({
@@ -133,5 +115,10 @@ export class ChatList implements OnInit {
       error: () => this.toastr.error('Could not start chat T-T')
     });
   }
+  onChatClick(chat: Chat) {
+  chat.unread_count = 0; 
+  this.applyFilters();  
+  this.cdr.detectChanges(); 
+}
 }
 

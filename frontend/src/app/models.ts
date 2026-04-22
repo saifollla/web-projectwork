@@ -18,5 +18,6 @@ export interface Chat {
   last_message?: Message; 
   unread_count?: number;
   isFavorite?: boolean;
+  is_favorite?: boolean;
   created_at: string;
 }

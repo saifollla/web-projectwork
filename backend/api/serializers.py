@@ -29,10 +29,12 @@ class LastMessageSerializer(serializers.ModelSerializer):
 class ChatListSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     last_message = serializers.SerializerMethodField() # Переопределяем логику
+    unread_count = serializers.SerializerMethodField()
+    is_favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = Chat
-        fields = ['id', 'name', 'last_message', 'created_at']
+        fields = ['id', 'name', 'last_message', 'unread_count', 'is_favorite','created_at']
 
     def get_name(self, obj):
         request = self.context.get('request')
@@ -53,6 +55,21 @@ class ChatListSerializer(serializers.ModelSerializer):
         if last_msg:
             return LastMessageSerializer(last_msg).data
         return None
+    def get_unread_count(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            from .models import MessageReadStatus
+            return MessageReadStatus.objects.filter(
+                message__chat=obj,
+                user=request.user,
+                is_read=False
+            ).count()
+        return 0
+    def get_is_favorite(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return request.user.favorite_chats.filter(id=obj.id).exists()
+        return False
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()

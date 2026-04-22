@@ -40,7 +40,15 @@ class MessageList(APIView):
         serializer = MessageModelSerializer(data=request.data)
         print(serializer.initial_data)
         if serializer.is_valid():
-            serializer.save(sender=request.user, chat_id=chat_id)
+            message = serializer.save(sender=request.user, chat_id=chat_id)
+            from .models import MessageReadStatus, Chat
+            participants = message.chat.participants.all()
+            for participant in participants:
+                MessageReadStatus.objects.create(
+                    message=message,
+                    user=participant,
+                    is_read=(participant == request.user)
+                )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -127,3 +135,15 @@ def register_view(request):
         token, _ = Token.objects.get_or_create(user=user)
         return Response({'access_token': token.key}, status=201)
     return Response(serializer.errors, status=400)
+
+@api_view(['POST'])
+def mark_messages_as_read(request, chat_id):
+    from .models import MessageReadStatus
+    unread_statuses = MessageReadStatus.objects.filter(
+        message__chat_id=chat_id,
+        user=request.user,
+        is_read=False
+    )
+    unread_statuses.update(is_read=True)
+    
+    return Response({"message": "Messages marked as read"}, status=200)

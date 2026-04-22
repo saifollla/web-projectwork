@@ -31,6 +31,7 @@ export class ChatRoom implements OnInit {
 
     this.chatService.getMe().subscribe(data => {
       this.currentUserId = data.id;
+      this.cdr.detectChanges();
     })
 
     this.route.paramMap.subscribe(params => {
@@ -39,8 +40,14 @@ export class ChatRoom implements OnInit {
     this.chatService.getMessages(this.chatId!).subscribe(data => {
       this.messages = data;
       console.log(data);
+      this.cdr.detectChanges();
     });
-      }
+    this.chatService.markAsRead(Number(this.chatId)).subscribe(() => {
+        console.log('read');
+        this.cdr.detectChanges();
+      });
+    }
+      
   });
   }
 
