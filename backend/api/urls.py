@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import login_view, logout_view, ChatList, MessageList, MessageDetail, register_view, get_me
+from .views import login_view, logout_view, ChatList, MessageList, MessageDetail, register_view, get_me, user_list_view
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 
@@ -9,6 +9,7 @@ urlpatterns = [
     path('auth/register/', register_view, name='register'),
 
     path('users/me/', get_me, name='get-me'),
+    path('users/', user_list_view, name='user-list'),
 
     path('chats/', ChatList.as_view(), name='chat-list'),
     path('chats/<int:chat_id>/messages/', MessageList.as_view(), name='message-list'),

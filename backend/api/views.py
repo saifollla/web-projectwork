@@ -16,6 +16,19 @@ class ChatList(APIView):
         chats = Chat.objects.filter(participants=request.user)
         serializer = ChatListSerializer(chats, many=True, context={'request': request})
         return Response(serializer.data)
+    
+    def post(self, request):
+        target_user_id = request.data.get('user_id')
+        if not target_user_id:
+            return Response({"error": "user_id is required"}, status=400)
+        try:
+            target_user = User.objects.get(id=target_user_id)
+            chat_name = f"Chat with {target_user.username}"
+            new_chat = Chat.objects.create(name=chat_name)
+            new_chat.participants.add(request.user, target_user)
+            return Response({"id": new_chat.id, "name": new_chat.name}, status=201)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=404)
 
 class MessageList(APIView):    
     def get(self, request, chat_id):
@@ -62,6 +75,12 @@ class MessageDetail(APIView):
 @api_view(['GET'])
 def get_me(request):
     serializer = UserSerializer(request.user)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def user_list_view(request):
+    users = User.objects.exclude(id=request.user.id)
+    serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
 
