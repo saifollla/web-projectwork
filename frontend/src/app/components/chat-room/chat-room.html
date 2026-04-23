@@ -1,20 +1,40 @@
 <div class="chat-container">
   <div class="chat-header">
     <button class="back-btn" routerLink="/chats">←</button>
-    <span class="chat-name">Chat #{{ chatId }}</span>
+    @if (!selectedMessageId) {
+      <span class="chat-name">Chat #{{ chatId }}</span>
+    } 
+    @else {
+      <div class="header-actions">
+        <span class="action-title">Message selected</span>
+        <div class="action-buttons">
+          <button (click)="startEditFromTop()" title="Edit text">✏️ Edit</button>
+          <button (click)="deleteSelectedMessage()" title="Delete forever">🗑️ Delete</button>
+          <button (click)="selectedMessageId = null" title="Cancel" class="cancel-btn">X</button>
+        </div>
+      </div>
+    }
   </div>
 
   <div class="messages-list">
     @for (msg of messages; track msg.id) {
       <div class="message-wrapper" [class.my-message]="msg.sender.id === currentUserId">
         
-        <div class="message-bubble">
+        <div class="message-bubble" (click)="toggleSelectMessage(msg, $event)", [class.selected]="selectedMessageId === msg.id">
           
-          @if (msg.sender && msg.sender.id !== 0) {
-            <span class="sender-name">{{ msg.sender.username }}</span>
+          @if (editingMessageId !== msg.id) {
+            <p class="text">{{ msg.text }}</p>
           }
 
-          <p class="text">{{ msg.text }}</p>
+          @else {
+            <div class="edit-box" (click)="$event.stopPropagation()">
+              <input [(ngModel)]="editBuffer" (keyup.enter)="saveEdit(msg.id)" class="edit-input">
+              <div class="edit-buttons">
+                <button class="btn-save" (click)="saveEdit(msg.id)"><span>✅</span> Save </button>
+                <button class="btn-cancel"(click)="cancelEdit()"><span>❌</span> Cancel </button>
+              </div>
+            </div>
+          }
           
           <span class="time">
             {{ msg.created_at | date:'HH:mm' }}

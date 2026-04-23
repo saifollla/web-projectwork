@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, HostListener } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,6 +21,9 @@ export class ChatRoom implements OnInit {
   messages: Message[] = [];
   
   currentUserId: number | null = null;
+  editingMessageId: number | null = null; 
+  editBuffer: string = ''; 
+
   private cdr = inject(ChangeDetectorRef);
   
 
@@ -56,15 +59,7 @@ export class ChatRoom implements OnInit {
 
     this.chatService.sendMessage(this.chatId!, this.newMessage.trim()).subscribe({
       next: (savedMessage) => {
-        console.log(savedMessage);
-        const msg: Message = {
-          id: savedMessage.id,
-          chat: savedMessage.chat,
-          text: savedMessage.text,
-          sender: savedMessage.sender,
-          created_at: savedMessage.created_at
-        };
-        this.messages.push(msg);
+        this.messages.push(savedMessage);
         
         this.newMessage = '';
 
@@ -76,7 +71,75 @@ export class ChatRoom implements OnInit {
     });
   }}
 
-  deleteMsg(id: number) {
-    this.messages = this.messages.filter(m => m.id !== id);
+
+
+deleteMsg(messageId: number) {
+  if (confirm('delete?')) {
+    this.chatService.deleteMessage(messageId).subscribe({
+      next: () => {
+        this.messages = this.messages.filter(m => m.id !== messageId);
+        this.cdr.detectChanges(); 
+      },
+      error: () => alert('Error while deleting message!')
+    });
   }
+}
+deleteSelectedMessage() {
+    if (this.selectedMessageId) {
+      this.deleteMsg(this.selectedMessageId); // Просто вызываем общий метод
+    }
+  }
+
+startEdit(msg: any) {
+  this.editingMessageId = msg.id;
+  this.editBuffer = msg.text;   
+}
+startEditFromTop() {
+  if (this.selectedMessageId) {
+    const msg = this.messages.find(m => m.id === this.selectedMessageId);
+    if (msg) {
+      this.startEdit(msg);
+      this.selectedMessageId = null; 
+    }
+  }
+}
+saveEdit(messageId: number) {
+  if (!this.editBuffer.trim()) return;
+
+  this.chatService.updateMessage(messageId, this.editBuffer).subscribe({
+    next: (updatedMsg) => {
+      const msgIndex = this.messages.findIndex(m => m.id === messageId);
+      if (msgIndex !== -1) {
+        this.messages[msgIndex].text = updatedMsg.text;
+      }
+      this.cancelEdit(); 
+      this.cdr.detectChanges();
+    }
+  });
+}
+cancelEdit() {
+  this.editingMessageId = null;  
+  this.editBuffer = '';
+}
+
+  selectedMessageId: number | null = null;
+  toggleSelectMessage(msg: Message, event: Event) {
+  event.stopPropagation(); 
+
+  if (msg.sender.id !== this.currentUserId) return;
+
+  if (this.selectedMessageId === msg.id) {
+    this.selectedMessageId = null;
+  } else {
+    this.selectedMessageId = msg.id;
+    this.cancelEdit(); 
+  }
+}
+
+@HostListener('document:click', ['$event'])
+deselectOnOutsideClick(event: Event) {
+  this.selectedMessageId = null;
+}
+
+
 }

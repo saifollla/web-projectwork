@@ -63,4 +63,18 @@ createChat(userId: number): Observable<Chat> {
 markAsRead(chatId: number) {
   return this.http.post(`${this.apiUrl}/chats/${chatId}/read/`, {});
 }
+
+deleteMessage(messageId: number): Observable<any> {
+  const headers = this.getHeaders();
+  return this.http.delete(`${this.apiUrl}/messages/${messageId}/`, { headers });
+}
+
+updateMessage(messageId: number, newText: string): Observable<Message> {
+  const headers = this.getHeaders();
+  return this.http.patch<Message>(
+    `${this.apiUrl}/messages/${messageId}/`, 
+    { text: newText }, 
+    { headers }
+  );
+}
 }
