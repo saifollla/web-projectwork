@@ -16,7 +16,7 @@
     }
   </div>
 
-  <div class="messages-list">
+  <div class="messages-list" #scrollContainer>
     @for (msg of messages; track msg.id) {
       <div class="message-wrapper" [class.my-message]="msg.sender.id === currentUserId">
         

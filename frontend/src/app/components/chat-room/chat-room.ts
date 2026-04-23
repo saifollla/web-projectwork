@@ -1,9 +1,10 @@
-import { Component, OnInit, inject, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef, HostListener, OnDestroy, ViewChild, ElementRef, AfterViewChecked, } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Message, User } from '../../models';
 import { ChatService } from '../../services/chat';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat-room',
@@ -15,7 +16,7 @@ import { ChatService } from '../../services/chat';
     'class': 'app-chat-room',
   }
 })
-export class ChatRoom implements OnInit {
+export class ChatRoom implements OnInit, OnDestroy, AfterViewChecked {
   chatId: string | null = '';
   newMessage = ''; 
   messages: Message[] = [];
@@ -25,7 +26,8 @@ export class ChatRoom implements OnInit {
   editBuffer: string = ''; 
 
   private cdr = inject(ChangeDetectorRef);
-  
+  private updateSubscription?: Subscription;
+  @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   constructor(private route: ActivatedRoute, private chatService: ChatService) {
   }
@@ -40,18 +42,56 @@ export class ChatRoom implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.chatId = params.get('id');
       if (this.chatId) {
-    this.chatService.getMessages(this.chatId!).subscribe(data => {
-      this.messages = data;
-      console.log(data);
-      this.cdr.detectChanges();
+      this.firstLoadMessages();
+      this.markAsRead();
+      } 
     });
-    this.chatService.markAsRead(Number(this.chatId)).subscribe(() => {
-        console.log('read');
+    
+   
+    this.updateSubscription = interval(5000).subscribe(() => {
+      this.refreshMessages();
+    });
+      
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+  private scrollToBottom(): void {
+    try {
+      this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+    } catch (err) {
+    }
+  }
+  
+  firstLoadMessages() {
+    if (this.chatId) {
+      this.chatService.getMessages(this.chatId).subscribe(data => {
+        this.messages = data;
         this.cdr.detectChanges();
       });
     }
-      
-  });
+  }
+  refreshMessages() {
+    if (this.chatId) {
+      this.chatService.getMessages(this.chatId).subscribe(data => {
+        if (data.length !== this.messages.length) {
+          this.messages = data;
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  }
+  markAsRead() {
+    if (this.chatId) {
+      this.chatService.markAsRead(Number(this.chatId)).subscribe(()=>{
+        this.cdr.detectChanges();
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    this.updateSubscription?.unsubscribe();
   }
 
   send() {
@@ -86,7 +126,7 @@ deleteMsg(messageId: number) {
 }
 deleteSelectedMessage() {
     if (this.selectedMessageId) {
-      this.deleteMsg(this.selectedMessageId); // Просто вызываем общий метод
+      this.deleteMsg(this.selectedMessageId); 
     }
   }
 
