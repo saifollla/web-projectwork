@@ -2,7 +2,7 @@
   <aside class = "sidebar">
     <div class="sidebar-header">
       <h1 class="lovely-logo">GigaChat</h1>
-      <button (click)="logout()" class="logout-btn">🚪</button>
+      
     </div>
 
     <div class="search-section">
@@ -62,7 +62,9 @@
       }
       @if (isSearchActive && chats.length === 0 && foundUsers.length === 0) {
         <div class="empty-state">
-          <div class="empty-state-icon">🔍</div>
+          <img src="https://i.pinimg.com/originals/64/df/83/64df83b409323bd66eaf200042de5603.gif" 
+         alt="Start your conversation!" 
+         class="empty-chat-gif">
           <h3>No matches!</h3>
           <p>We couldn't find anyone matching "{{ ngModelSearch }}".</p>
           <button (click)="ngModelSearch=''; onSearchClick()" class="action-btn">Clear search</button>
@@ -70,11 +72,14 @@
       }
       @if (!isSearchActive && chats.length === 0) {
         <div class="empty-state">
-          <div class="empty-state-icon">💖</div>
+          <img src="https://i.pinimg.com/originals/70/b2/91/70b2917842a9007f40672266fd731f28.gif"
+         alt="Start your conversation!" 
+         class="empty-chat-gif">
           <h3>No chats yet!</h3>
           <p>You don't have active chats. Try searching for friends!</p>
         </div>
       }
+      <button (click)="logout()" class="logout-btn">🚪</button>
       
     
   </div>
@@ -86,9 +91,11 @@
     <router-outlet></router-outlet>
     @if (router.url === '/chats') {
       <div class="no-chat-selected">
-        <div class="heart">💖</div>
-        <h2>GigaChat Messenger</h2>
-        <p>Choose a chat to start messaging</p>
+        <img src="https://i.pinimg.com/originals/87/d5/88/87d588d92e1b4decd302a96c265d7a39.gif" 
+         alt="Start your conversation!" 
+         class="empty-chat-gif">
+    <p>No messages...</p>
+    <span>Start your conversation!</span>
       </div>
     }
   </main>

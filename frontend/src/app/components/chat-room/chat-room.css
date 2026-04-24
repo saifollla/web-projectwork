@@ -185,7 +185,25 @@
   cursor: pointer;
   transition: background 0.2s;
 }
+.empty-chat-gif {
+  width: 150px; 
+  height: auto;
+  margin-bottom: 15px;
+  animation: fadeIn 0.5s ease-in-out;
+}
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.empty-chat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%; 
+}
 .action-buttons button:hover {
   background: #fdf2f4; 
 }

@@ -8,6 +8,25 @@
   background-color: #ffe0eb;
 
 }
+.empty-chat-gif {
+  width: 150px; 
+  height: auto;
+  margin-bottom: 15px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.empty-chat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%; 
+}
 .search-divider {
   padding: 15px;
   font-size: 14px;
@@ -218,8 +237,7 @@ color: #b54777;}
 
 
 .logout-btn {
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin-top: auto;
   width: 100%;
   padding: 10px;
   color: white;
@@ -229,6 +247,7 @@ color: #b54777;}
   background-color: #ff85b3;
   transition: background-color 0.3s;
   font-size: 15px;
+  
 }
 .logout-btn:hover {
   background-color: #ff66a3;
