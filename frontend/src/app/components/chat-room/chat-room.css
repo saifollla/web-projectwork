@@ -6,7 +6,8 @@
   width: 100%;  
   margin: 0 auto;
   border: 1px solid #ddd;
-  background-color: #fffafc; 
+  background-image: url('/assets/background-pattern.jpeg');
+  background-repeat: repeat;
 }
 
 .chat-header {
@@ -41,6 +42,24 @@
   gap: 10px;
 }
 
+.messages-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.messages-list::-webkit-scrollbar-thumb {
+  background-color: #ffc1d6; 
+  border-radius: 10px;
+  border: 1px solid transparent; 
+}
+
+.messages-list::-webkit-scrollbar-thumb:hover {
+  background-color: #ff85b3; 
+}
+
 .message-wrapper {
   display: flex;
   width: 100%;
@@ -58,6 +77,7 @@
 
 .my-message {
   justify-content: flex-end;
+  color: white;
 }
 
 .my-message .message-bubble {
@@ -88,7 +108,7 @@
 
 .input-area {
   padding: 15px;
-  background: #fff;
+  background: transparent;
   display: flex;
   gap: 10px;
   align-items: center;
