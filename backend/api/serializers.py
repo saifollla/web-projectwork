@@ -16,11 +16,7 @@ class MessageModelSerializer(serializers.ModelSerializer):
         read_only_fields = ['chat']
 
 
-# class ChatListSerializer(serializers.Serializer):
-#     id = serializers.IntegerField()
-#     name = serializers.CharField()
-#     last_message_text = serializers.CharField(source='messages.last.text', read_only=True)
-#     unread_count = serializers.IntegerField(default=0)
+
 class LastMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
@@ -28,7 +24,7 @@ class LastMessageSerializer(serializers.ModelSerializer):
 
 class ChatListSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
-    last_message = serializers.SerializerMethodField() # Переопределяем логику
+    last_message = serializers.SerializerMethodField()
     unread_count = serializers.SerializerMethodField()
     is_favorite = serializers.SerializerMethodField()
 
