@@ -4,19 +4,30 @@ from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from drf_spectacular.utils import extend_schema
-# from django.contrib.auth.models import User
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from .models import Message, Chat, User
-from .serializers import MessageModelSerializer, LoginSerializer, ChatListSerializer, RegisterSerializer, UserSerializer
-
-
+from .serializers import (
+    MessageModelSerializer, LoginSerializer, ChatListSerializer, 
+    RegisterSerializer, UserSerializer
+)
 
 class ChatList(APIView):
+    @extend_schema(
+        summary="Get user chat list",
+        responses={200: ChatListSerializer(many=True)},
+        description="Returns all chats where the current user is a participant."
+    )
     def get(self, request):
         chats = Chat.objects.filter(participants=request.user)
         serializer = ChatListSerializer(chats, many=True, context={'request': request})
         return Response(serializer.data)
     
+    @extend_schema(
+        summary="Create a new chat",
+        request={'type': 'object', 'properties': {'user_id': {'type': 'integer'}}},
+        responses={201: {'type': 'object', 'properties': {'id': {'type': 'integer'}, 'name': {'type': 'string'}}}},
+        description="Creates a chat with a specific user by their ID."
+    )
     def post(self, request):
         target_user_id = request.data.get('user_id')
         if not target_user_id:
@@ -30,18 +41,28 @@ class ChatList(APIView):
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=404)
 
-class MessageList(APIView):    
+class MessageList(APIView):
+    @extend_schema(
+        summary="Get messages in chat",
+        responses={200: MessageModelSerializer(many=True)},
+        description="Retrieves all messages for a specific chat ID."
+    )
     def get(self, request, chat_id):
         messages = Message.objects.for_chat(chat_id)
         serializer = MessageModelSerializer(messages, many=True)
         return Response(serializer.data)
 
+    @extend_schema(
+        summary="Send a message",
+        request=MessageModelSerializer,
+        responses={201: MessageModelSerializer},
+        description="Sends a message to a chat and initializes read status for participants."
+    )
     def post(self, request, chat_id):
         serializer = MessageModelSerializer(data=request.data)
-        print(serializer.initial_data)
         if serializer.is_valid():
             message = serializer.save(sender=request.user, chat_id=chat_id)
-            from .models import MessageReadStatus, Chat
+            from .models import MessageReadStatus
             participants = message.chat.participants.all()
             for participant in participants:
                 MessageReadStatus.objects.create(
@@ -53,6 +74,10 @@ class MessageList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class MessageDetail(APIView):
+    @extend_schema(
+        summary="Get message details",
+        responses={200: MessageModelSerializer}
+    )
     def get(self, request, pk):
         try:
             message = Message.objects.get(pk=pk)
@@ -61,6 +86,12 @@ class MessageDetail(APIView):
         except Message.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         
+    @extend_schema(
+        summary="Edit message",
+        request=MessageModelSerializer,
+        responses={200: MessageModelSerializer},
+        description="Updates message content if the user is the sender."
+    )
     def patch(self, request, pk):
         try:
             message = Message.objects.get(pk=pk, sender=request.user)
@@ -70,8 +101,13 @@ class MessageDetail(APIView):
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Message.DoesNotExist:
-            return Response({"error": "Message not found or not your"}, status=404)
+            return Response({"error": "Message not found or not yours"}, status=404)
 
+    @extend_schema(
+        summary="Delete message",
+        responses={204: None},
+        description="Permanently deletes a message if the user is the sender."
+    )
     def delete(self, request, pk):
         try:
             message = Message.objects.get(pk=pk, sender=request.user)
@@ -80,22 +116,32 @@ class MessageDetail(APIView):
         except Message.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+@extend_schema(
+    summary="Get current user profile",
+    responses={200: UserSerializer},
+    description="Returns data for the currently authenticated user."
+)
 @api_view(['GET'])
 def get_me(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
+@extend_schema(
+    summary="List all users",
+    responses={200: UserSerializer(many=True)},
+    description="Returns a list of all users excluding the current user."
+)
 @api_view(['GET'])
 def user_list_view(request):
     users = User.objects.exclude(id=request.user.id)
     serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
-
 @extend_schema(
+    summary="Login",
     request=LoginSerializer,
     responses={200: {'type': 'object', 'properties': {'access_token': {'type': 'string'}}}},
-    description="Авторизация пользователя и получение токена."
+    description="Authenticates user and returns an auth token."
 )
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny]) 
@@ -112,15 +158,21 @@ def login_view(request):
         return Response({'error': 'Invalid Credentials'}, status=400)
     return Response(serializer.errors, status=400)
 
+@extend_schema(
+    summary="Logout",
+    responses={200: {'type': 'object', 'properties': {'message': {'type': 'string'}}}},
+    description="Deletes the current user's authentication token."
+)
 @api_view(['POST'])
 def logout_view(request):
     request.user.auth_token.delete()
     return Response({"message": "Successfully logged out"}, status=200)
 
 @extend_schema(
+    summary="Register",
     request=RegisterSerializer,
-    responses={200: {'type': 'object', 'properties': {'access_token': {'type': 'string'}}}},
-    description="Авторизация пользователя и получение токена."
+    responses={201: {'type': 'object', 'properties': {'access_token': {'type': 'string'}}}},
+    description="Creates a new user account and returns an auth token."
 )
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
@@ -136,6 +188,11 @@ def register_view(request):
         return Response({'access_token': token.key}, status=201)
     return Response(serializer.errors, status=400)
 
+@extend_schema(
+    summary="Mark messages as read",
+    responses={200: {'type': 'object', 'properties': {'message': {'type': 'string'}}}},
+    description="Marks all unread messages in a specific chat as read for the current user."
+)
 @api_view(['POST'])
 def mark_messages_as_read(request, chat_id):
     from .models import MessageReadStatus
@@ -145,5 +202,4 @@ def mark_messages_as_read(request, chat_id):
         is_read=False
     )
     unread_statuses.update(is_read=True)
-    
     return Response({"message": "Messages marked as read"}, status=200)

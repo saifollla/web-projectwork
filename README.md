@@ -26,6 +26,12 @@ GigaChat is a full-stack web application developed as a collaborative university
 
 ## 🛠️ Installation & Setup
 
+## **Docker compose**
+
+`docker compose up -d --build`
+
+## **Manual**
+
 ### 1. Prerequisites
 Ensure you have the following installed:
 * Python (v3.11 or higher)
@@ -53,5 +59,14 @@ python manage.py runserver
 ### 3. Frontend Setup (Angular)
 ```bash 
 cd frontend
+
+npm install
+
 ng serve
 ```
+
+---
+
+## 🗃️ Endpoints documentation
+
+`http://localhost:8000/api/docs`
