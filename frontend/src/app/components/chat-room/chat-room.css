@@ -8,6 +8,7 @@
   border: 1px solid #ddd;
   background-image: url('/assets/background-pattern.jpeg');
   background-repeat: repeat;
+  background-size: 700px;
 }
 
 .chat-header {
@@ -112,7 +113,6 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  border-top: 1px solid #ffeff4;
 }
 
 .input-area input {
