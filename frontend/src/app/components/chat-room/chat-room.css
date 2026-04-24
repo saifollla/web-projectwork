@@ -6,7 +6,7 @@
   width: 100%;  
   margin: 0 auto;
   border: 1px solid #ddd;
-  background-image: url('/assets/background-pattern.jpeg');
+  background-image: url('/assets/background.png');
   background-repeat: repeat;
   background-size: 700px;
 }
