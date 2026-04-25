@@ -21,11 +21,11 @@
   flex-direction: column;
   text-align: left;
 }
-.left-section::before {
-  content: "✨🫧🏩"; 
-  font-size: 150px;
+.login-gif {
+  width: 280px;      
+  height: auto;
   margin-bottom: 20px;
-  display: block;
+  align-self: flex-start; 
 }
 
 .logo {
@@ -125,6 +125,7 @@
     padding: 20px;
     justify-content: flex-start; 
     overflow-y: auto; 
+    
   }
 
   .left-section {
