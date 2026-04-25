@@ -24,7 +24,6 @@ export class ChatRoom implements OnInit, OnDestroy, AfterViewChecked {
   currentUserId: number | null = null;
   editingMessageId: number | null = null; 
   editBuffer: string = ''; 
-
   private cdr = inject(ChangeDetectorRef);
   private updateSubscription?: Subscription;
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;

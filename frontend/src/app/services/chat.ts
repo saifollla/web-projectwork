@@ -11,70 +11,52 @@ export class ChatService {
 
   constructor(private http: HttpClient) {}
 
-  private getHeaders() {
-    const token = localStorage.getItem('access_token');
-    return new HttpHeaders({
-      'Authorization': `Token ${token}`,
-      'Content-Type': 'application/json'
-    });
-  }
-
   getMe(): Observable<User> {
-    const headers = this.getHeaders();
     
-    return this.http.get<User>(`${this.apiUrl}/users/me/`, { headers }).pipe(
+    return this.http.get<User>(`${this.apiUrl}/users/me/`).pipe(
       tap(response => console.log('Chats loaded:', response))
     );
   }
 
   getChats(): Observable<Chat[]> {
-    const headers = this.getHeaders();
     
-    return this.http.get<Chat[]>(`${this.apiUrl}/chats/`, { headers }).pipe(
+    return this.http.get<Chat[]>(`${this.apiUrl}/chats/`).pipe(
       tap(response => console.log('Chats loaded:', response))
     );
   }
 
   getMessages(chatId: string): Observable<Message[]> {
-    const headers = this.getHeaders();
-    
-    return this.http.get<Message[]>(`${this.apiUrl}/chats/${chatId}/messages/`, { headers }).pipe(
+    return this.http.get<Message[]>(`${this.apiUrl}/chats/${chatId}/messages/`).pipe(
       tap(response => console.log('Chats loaded:', response))
     );
   }
 
   sendMessage(chatId: string, text: string): Observable<Message> {
-    const headers = this.getHeaders();
 
     return this.http.post<Message>(
       `${this.apiUrl}/chats/${chatId}/messages/`, 
-      { text },
-      { headers: headers }, 
+      { text }, 
     );
   }
 
   getAllUsers(): Observable<User[]> {
-  return this.http.get<User[]>(`${this.apiUrl}/users/`, { headers: this.getHeaders() });
+  return this.http.get<User[]>(`${this.apiUrl}/users/`);
 }
 
 createChat(userId: number): Observable<Chat> {
-  return this.http.post<Chat>(`${this.apiUrl}/chats/`, { user_id: userId }, { headers: this.getHeaders() });
+  return this.http.post<Chat>(`${this.apiUrl}/chats/`, { user_id: userId });
 }
 markAsRead(chatId: number) {
   return this.http.post(`${this.apiUrl}/chats/${chatId}/read/`, {});
 }
 
 deleteMessage(messageId: number): Observable<any> {
-  const headers = this.getHeaders();
-  return this.http.delete(`${this.apiUrl}/messages/${messageId}/`, { headers });
+  return this.http.delete(`${this.apiUrl}/messages/${messageId}/`);
 }
 
 updateMessage(messageId: number, newText: string): Observable<Message> {
-  const headers = this.getHeaders();
   return this.http.patch<Message>(
     `${this.apiUrl}/messages/${messageId}/`, 
-    { text: newText }, 
-    { headers }
-  );
+    { text: newText }  );
 }
 }

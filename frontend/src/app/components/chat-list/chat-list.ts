@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { ChatService } from '../../services/chat'; 
 import { Chat } from '../../models'; 
 import { ToastrService } from 'ngx-toastr'; 
+import { Subscription } from 'rxjs/internal/Subscription';
+import { interval } from 'rxjs/internal/observable/interval';
 
 @Component({
   selector: 'app-chat-list',
@@ -30,23 +32,30 @@ export class ChatList implements OnInit {
   router = inject(Router);
   ngModelSearch: string = '';
   cdr = inject(ChangeDetectorRef);
+  private updateSubscription?: Subscription;
 
   ngOnInit() {
 
-    this.chatService.getChats().subscribe(data => {
-      console.log('Данные от API:', data);
-      this.allChats = data.map(c => ({
-        ...c,
-        unread_count: Number(c.unread_count) || 0,
-        isFavorite: c.is_favorite || c.isFavorite || false
-      }));
-      this.applyFilters();
-      this.cdr.detectChanges();
-    });
+    this.loadChats(); 
+
+    this.updateSubscription = interval(5000).subscribe(() => {
+    this.loadChats();
+  });
     this.chatService.getAllUsers().subscribe(users => {
       this.allUsers = users;
     });
   }
+  loadChats() {
+  this.chatService.getChats().subscribe(data => {
+    this.allChats = data.map(c => ({
+      ...c,
+      unread_count: Number(c.unread_count) || 0,
+      isFavorite: c.is_favorite || false
+    }));
+    this.applyFilters();
+    this.cdr.detectChanges();
+  });
+}
 
   setFilter(filter: 'all' | 'unread' | 'favorites') {
     this.currentFilter = filter;
@@ -119,6 +128,9 @@ export class ChatList implements OnInit {
   chat.unread_count = 0; 
   this.applyFilters();  
   this.cdr.detectChanges(); 
+}
+ngOnDestroy() {
+  this.updateSubscription?.unsubscribe(); 
 }
 }
 
